@@ -1,0 +1,26 @@
+{% extends 'library/base.html' %}
+{% block title %}Catalogue | Stacks{% endblock %}
+{% block content %}
+<section class="page-heading catalogue-heading">
+  <div><p class="eyebrow">DISCOVER SOMETHING GOOD</p><h1>The catalogue</h1><p class="heading-copy">Find your next read from across the campus collection.</p></div>
+  {% if user.is_staff %}<a class="button-solid" href="{% url 'book_create' %}"><span>＋</span> Add a book</a>{% endif %}
+</section>
+<form class="filter-bar" method="get">
+  <label class="search-field"><span aria-hidden="true">⌕</span><input type="search" name="q" value="{{ query }}" placeholder="Search title, author, ISBN…" aria-label="Search catalogue"></label>
+  <select name="category" aria-label="Filter by category"><option value="">All categories</option>{% for category in categories %}<option value="{{ category.pk }}" {% if selected_category == category.pk|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select>
+  <select name="availability" aria-label="Filter by availability"><option value="">Any availability</option><option value="available" {% if availability == 'available' %}selected{% endif %}>Available now</option><option value="unavailable" {% if availability == 'unavailable' %}selected{% endif %}>Currently out</option></select>
+  <button class="button-outline" type="submit">Filter</button>
+  {% if query or selected_category or availability %}<a class="reset-link" href="{% url 'book_list' %}">Clear</a>{% endif %}
+</form>
+<div class="catalogue-meta"><span><strong>{{ books|length }}</strong> title{{ books|length|pluralize }} found</span><div class="legend"><span><i class="status-dot available"></i>Available</span><span><i class="status-dot unavailable"></i>Checked out</span></div></div>
+<div class="table-wrap"><table class="table library-table align-middle mb-0">
+  <thead><tr><th scope="col">TITLE / AUTHOR</th><th scope="col">CATEGORY</th><th scope="col">ISBN</th><th scope="col">IN COLLECTION</th><th scope="col">STATUS</th><th scope="col"><span class="visually-hidden">Details</span></th></tr></thead>
+  <tbody>{% for book in books %}<tr>
+    <td><a class="book-title-link" href="{% url 'book_detail' book.pk %}">{{ book.title }}</a><span class="table-subtext">{{ book.author.name }}</span></td>
+    <td><span class="category-tag">{{ book.category.name }}</span></td><td class="isbn-cell">{{ book.isbn }}</td>
+    <td><span class="copies-count">{{ book.available_copies }}</span><span class="table-subtext">of {{ book.total_copies }} copies</span></td>
+    <td>{% if book.is_available %}<span class="availability-pill is-available"><i class="status-dot available"></i>Available</span>{% else %}<span class="availability-pill is-out"><i class="status-dot unavailable"></i>Checked out</span>{% endif %}</td>
+    <td><a class="row-arrow" href="{% url 'book_detail' book.pk %}" aria-label="View {{ book.title }}">↗</a></td>
+  </tr>{% empty %}<tr><td colspan="6" class="empty-state"><span class="empty-glyph">⌕</span><strong>No titles match that search</strong><span>Try another title, author or category.</span></td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

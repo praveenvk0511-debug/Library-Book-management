@@ -1,0 +1,14 @@
+{% extends 'library/base.html' %}
+{% block title %}{{ book.title }} | Stacks{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="{% url 'book_list' %}">Catalogue</a><span>/</span><span>{{ book.title }}</span></div>
+<section class="book-detail-layout">
+  <div class="cover-frame">{% if book.cover %}<img src="{{ book.cover.url }}" alt="Cover of {{ book.title }}">{% else %}<div class="cover-placeholder"><span>{{ book.category.name|upper }}</span><strong>{{ book.title }}</strong><small>{{ book.author.name }}</small></div>{% endif %}</div>
+  <div class="book-detail-copy"><p class="eyebrow">{{ book.category.name|upper }} · {{ book.publication_year|default:'EDITION NOT LISTED' }}</p><h1>{{ book.title }}</h1><p class="book-byline">by {{ book.author.name }}</p>
+    <div class="availability-summary">{% if book.is_available %}<i class="status-dot available"></i><strong>Available to borrow</strong>{% else %}<i class="status-dot unavailable"></i><strong>All copies are checked out</strong>{% endif %}<span>{{ book.available_copies }} of {{ book.total_copies }} copies available</span></div>
+    <dl class="book-facts"><div><dt>ISBN</dt><dd>{{ book.isbn }}</dd></div><div><dt>Publisher</dt><dd>{{ book.publisher|default:'Not listed' }}</dd></div><div><dt>Category</dt><dd>{{ book.category.name }}</dd></div></dl>
+    <h2 class="detail-section-title">About this title</h2><p class="book-description">{{ book.description|default:'No description has been added for this title yet.'|linebreaksbr }}</p>
+    {% if user.is_staff %}<div class="action-row"><a class="button-solid" href="{% url 'book_update' book.pk %}">Edit details</a><a class="button-danger-outline" href="{% url 'book_delete' book.pk %}">Remove book</a></div>{% endif %}
+  </div>
+</section>
+{% endblock %}

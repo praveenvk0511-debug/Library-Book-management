@@ -1,0 +1,4 @@
+{% extends 'library/base.html' %}
+{% block title %}{{ title }} | Stacks{% endblock %}
+{% block content %}<div class="breadcrumbs"><a href="{% url 'book_list' %}">Catalogue</a><span>/</span><span>{{ title }}</span></div>
+<section class="confirm-panel"><span class="confirm-symbol">!</span><p class="eyebrow">PLEASE CONFIRM</p><h1>{{ title }}</h1><p>You are about to remove <strong>{{ object }}</strong>. This action cannot be undone.</p><form method="post" data-confirm="Remove this record?">{% csrf_token %}<button class="button-danger" type="submit">Confirm removal</button><a class="button-quiet" href="{% url 'book_list' %}">Cancel</a></form></section>{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'library/base.html' %}
+{% block title %}My fines | Stacks{% endblock %}
+{% block content %}<section class="page-heading"><div><p class="eyebrow">MEMBER ACCOUNT</p><h1>My fines</h1><p class="heading-copy">Charges are calculated using the library's configured daily rate.</p></div></section>
+<section class="member-fine-summary"><span class="stat-label">TOTAL OUTSTANDING</span><strong>${{ fine_total|floatformat:2 }}</strong><span>Pending charges appear here. Please contact the library desk to pay.</span></section>
+<div class="table-wrap"><table class="table library-table align-middle mb-0"><thead><tr><th>BOOK</th><th>DUE DATE</th><th>RETURN DATE</th><th>OVERDUE</th><th>AMOUNT</th><th>PAYMENT</th></tr></thead><tbody>
+{% for row in fine_rows %}<tr><td>{{ row.loan.book.title }}</td><td>{{ row.loan.due_date|date:'M j, Y' }}</td><td>{{ row.loan.return_date|date:'M j, Y'|default:'Still borrowed' }}</td><td>{{ row.loan.overdue_days }} days</td><td class="money-value">${{ row.amount|floatformat:2 }}</td><td>{% if row.is_paid %}<span class="record-status status-returned">Paid</span>{% else %}<span class="record-status status-late">Pending</span>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6" class="table-empty">No fines or overdue books on your account.</td></tr>{% endfor %}</tbody></table></div>
+<p class="fine-note">Late returns accrue at the daily amount set by the library. Unreturned books may continue to accrue charges.</p>{% endblock %}

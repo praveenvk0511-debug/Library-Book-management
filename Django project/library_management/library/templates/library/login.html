@@ -1,0 +1,5 @@
+{% extends 'library/base.html' %}
+{% block title %}Sign in | Stacks{% endblock %}
+{% block content %}<section class="auth-layout"><div class="auth-art"><p class="eyebrow">A CAMPUS OF STORIES</p><h1>Good things<br>are waiting<br>on the shelf.</h1><span class="auth-art-note">Browse, borrow, return. Repeat.</span></div><div class="auth-form-wrap"><p class="eyebrow">MEMBER ACCESS</p><h2>Welcome back</h2><p class="auth-copy">Sign in to view your loans and due dates.</p>
+  <form method="post" class="form-surface auth-form">{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">Your username and password did not match. Please try again.</div>{% endif %}{% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}<input type="hidden" name="next" value="{{ next }}"><button class="button-solid button-wide" type="submit">Sign in</button></form>
+  <p class="form-footnote">New to the library? <a href="{% url 'register' %}">Create a member account</a></p></div></section>{% endblock %}

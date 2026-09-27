@@ -1,0 +1,11 @@
+{% extends 'library/base.html' %}
+{% block title %}{{ title }} | Stacks{% endblock %}
+{% block content %}<div class="breadcrumbs"><a href="{% url 'book_list' %}">Catalogue</a><span>/</span><span>{{ title }}</span></div>
+<section class="form-page"><div class="form-intro"><p class="eyebrow">{% if registration %}MEMBER ACCESS{% else %}LIBRARY DESK{% endif %}</p><h1>{{ title }}</h1><p>{% if registration %}Create your campus library account to keep track of borrowed titles and due dates.{% else %}Enter the details below. Required fields are marked in the form.{% endif %}</p></div>
+  <form method="post" enctype="multipart/form-data" class="form-surface" novalidate>{% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}<div class="form-field {% if field.errors %}has-error{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small class="field-help">{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}
+    <div class="form-actions"><button class="button-solid" type="submit">{% if registration %}Create account{% else %}Save changes{% endif %}</button><a class="button-quiet" href="{% url 'book_list' %}">Cancel</a></div>
+    {% if registration %}<p class="form-footnote">Already registered? <a href="{% url 'login' %}">Sign in</a></p>{% endif %}
+  </form>
+</section>{% endblock %}
